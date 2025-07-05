@@ -1,161 +1,359 @@
-import React, { useState } from 'react';
-import { Star, Heart, Share2, Truck, Shield, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, ChevronLeft, ChevronRight, Play, Pause, Volume2, Headphones, Wifi, Battery } from 'lucide-react';
 
 const ProductHero = () => {
-  const [selectedColor, setSelectedColor] = useState('white');
+  const [selectedColor, setSelectedColor] = useState('black');
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const colors = [
-    { name: 'white', color: 'bg-gray-100', label: 'Arctic White' },
     { name: 'black', color: 'bg-gray-900', label: 'Midnight Black' },
-    { name: 'green', color: 'bg-emerald-500', label: 'Forest Green' },
-    { name: 'blue', color: 'bg-blue-500', label: 'Ocean Blue' }
+    { name: 'white', color: 'bg-gray-100', label: 'Pearl White' },
+    { name: 'blue', color: 'bg-blue-500', label: 'Ocean Blue' },
+    { name: 'green', color: 'bg-green-500', label: 'Forest Green' }
   ];
 
-  const thumbnails = [
-    { id: 0, alt: 'Main view' },
-    { id: 1, alt: 'Side view' },
-    { id: 2, alt: 'Detail view' },
-    { id: 3, alt: 'Back view' }
+  const productImages = [
+    'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/3394651/pexels-photo-3394651.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/3394652/pexels-photo-3394652.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/3394653/pexels-photo-3394653.jpeg?auto=compress&cs=tinysrgb&w=800'
   ];
 
   const features = [
-    { icon: Truck, text: 'Free shipping worldwide' },
-    { icon: Shield, text: '2-year warranty' },
-    { icon: RotateCcw, text: '30-day returns' }
+    {
+      icon: Headphones,
+      title: 'Premium Comfort',
+      description: 'Memory foam ear cushions for all-day comfort'
+    },
+    {
+      icon: Volume2,
+      title: 'Hi-Fi Audio',
+      description: 'Studio-quality sound with deep bass'
+    },
+    {
+      icon: Wifi,
+      title: 'Wireless Freedom',
+      description: 'Bluetooth 5.0 for seamless connectivity'
+    },
+    {
+      icon: Battery,
+      title: '30H Battery',
+      description: 'Extended playback on single charge'
+    }
   ];
 
+  const nextImage = () => {
+    setSelectedImage((prev) => (prev + 1) % productImages.length);
+  };
+
+  const prevImage = () => {
+    setSelectedImage((prev) => (prev - 1 + productImages.length) % productImages.length);
+  };
+
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-white pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Left side - Product Images */}
-          <div className="space-y-6">
-            <div className="relative group">
-              <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:shadow-3xl">
-                <div className="text-center">
-                  <div className="w-80 h-80 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center shadow-inner">
-                    <span className="text-gray-500 text-xl font-medium">Headphones Image</span>
-                  </div>
-                </div>
-              </div>
-              <button 
-                onClick={() => setIsWishlisted(!isWishlisted)}
-                className="absolute top-4 right-4 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-              >
-                <Heart className={`h-5 w-5 ${isWishlisted ? 'text-red-500 fill-current' : 'text-gray-600'}`} />
-              </button>
-              <button className="absolute top-4 left-4 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110">
-                <Share2 className="h-5 w-5 text-gray-600" />
-              </button>
-            </div>
-            <div className="grid grid-cols-4 gap-3">
-              {thumbnails.map((thumb) => (
+    <>
+      {/* Main Hero Section */}
+      <section className="bg-white relative overflow-hidden min-h-screen flex items-center">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-100/30 to-purple-100/30 rounded-full sonora-float"
+            style={{
+              transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
+            }}
+          ></div>
+          <div 
+            className="absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-r from-green-100/30 to-teal-100/30 rounded-full sonora-float sonora-delay-500"
+            style={{
+              transform: `translate(${mousePosition.x * -0.01}px, ${mousePosition.y * -0.01}px)`,
+            }}
+          ></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Left side - Product Images */}
+            <div className={`space-y-6 ${isVisible ? 'sonora-fade-in-left' : 'opacity-0'}`}>
+              <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl overflow-hidden group sonora-hover-lift">
+                <img 
+                  src={productImages[selectedImage]}
+                  alt="Sonora Pro Max"
+                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                  style={{
+                    transform: `translate(${mousePosition.x * 0.005}px, ${mousePosition.y * 0.005}px)`
+                  }}
+                />
+                
+                {/* Navigation Arrows */}
                 <button
-                  key={thumb.id}
-                  onClick={() => setSelectedImage(thumb.id)}
-                  className={`aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center border-3 transition-all duration-300 hover:scale-105 ${
-                    selectedImage === thumb.id 
-                      ? 'border-black shadow-lg' 
-                      : 'border-transparent hover:border-gray-300'
-                  }`}
+                  onClick={prevImage}
+                  className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-xl transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100 sonora-btn"
                 >
-                  <span className="text-gray-500 text-xs font-medium">IMG</span>
+                  <ChevronLeft className="h-6 w-6 text-gray-600" />
                 </button>
-              ))}
-            </div>
-          </div>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-xl transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100 sonora-btn"
+                >
+                  <ChevronRight className="h-6 w-6 text-gray-600" />
+                </button>
 
-          {/* Right side - Product Info */}
-          <div className="space-y-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600 font-medium">(4.8) • 2,847 reviews</span>
-                <span className="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">
-                  BESTSELLER
-                </span>
+                {/* Play Button */}
+                <button 
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="absolute bottom-6 right-6 bg-black/80 text-white px-4 py-2 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 sonora-btn flex items-center space-x-2"
+                >
+                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                  <span>360° View</span>
+                </button>
               </div>
-              <h1 className="text-5xl font-black text-gray-900 mb-2 tracking-tight">
-                Sonora Pro Max
-              </h1>
-              <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                Experience premium audio with advanced noise cancellation and studio-quality sound.
-              </p>
-              <div className="flex items-baseline space-x-3 mb-8">
-                <span className="text-4xl font-black text-gray-900">€149.99</span>
-                <span className="text-xl text-gray-500 line-through">€199.99</span>
-                <span className="bg-red-100 text-red-800 text-sm font-bold px-2 py-1 rounded-full">
-                  25% OFF
-                </span>
-              </div>
-            </div>
-
-            {/* Color Selection */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-gray-900">Choose Color</h3>
-              <div className="flex space-x-4">
-                {colors.map((color) => (
+              
+              {/* Thumbnail Navigation */}
+              <div className="grid grid-cols-4 gap-3">
+                {productImages.map((image, index) => (
                   <button
-                    key={color.name}
-                    onClick={() => setSelectedColor(color.name)}
-                    className={`relative group`}
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`aspect-square bg-gray-100 rounded-xl overflow-hidden border-3 transition-all duration-500 sonora-hover-lift ${
+                      selectedImage === index 
+                        ? 'border-black sonora-glow transform scale-105' 
+                        : 'border-transparent hover:border-gray-300'
+                    }`}
                   >
-                    <div className={`w-12 h-12 rounded-full ${color.color} border-3 transition-all duration-200 ${
-                      selectedColor === color.name 
-                        ? 'border-black shadow-lg scale-110' 
-                        : 'border-gray-300 hover:border-gray-400 hover:scale-105'
-                    }`} />
-                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      {color.label}
-                    </span>
+                    <img 
+                      src={image}
+                      alt={`View ${index + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Add to Cart Button */}
-            <div className="space-y-4">
-              <button className="w-full bg-gradient-to-r from-gray-900 to-black text-white py-4 px-8 rounded-xl font-bold text-lg hover:from-black hover:to-gray-900 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
-                ADD TO CART
-              </button>
+            {/* Right side - Product Info */}
+            <div className={`space-y-8 ${isVisible ? 'sonora-fade-in-right' : 'opacity-0'}`}>
               
-              <button className="w-full border-2 border-gray-900 text-gray-900 py-4 px-8 rounded-xl font-bold text-lg hover:bg-gray-900 hover:text-white transition-all duration-300">
-                BUY NOW - PAY LATER
-              </button>
-            </div>
-
-            {/* Features */}
-            <div className="grid grid-cols-1 gap-3">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center space-x-3 text-gray-600">
-                  <feature.icon className="h-5 w-5" />
-                  <span className="text-sm font-medium">{feature.text}</span>
+              {/* Reviews */}
+              <div className="flex items-center space-x-3 sonora-fade-in-up">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className="h-5 w-5 text-yellow-400 fill-current sonora-scale-in"
+                      style={{ animationDelay: `${i * 0.1}s` }}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+                <span className="text-sm text-gray-600">(4.8) • 2,847 reviews</span>
+                <span className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">
+                  ✓ Verified
+                </span>
+              </div>
+              
+              {/* Product Title */}
+              <div>
+                <h1 className="text-6xl font-bold text-black mb-4 sonora-fade-in-up sonora-delay-200">
+                  Sonora Pro Max
+                </h1>
+                <p className="text-xl text-gray-600 leading-relaxed sonora-fade-in-up sonora-delay-300">
+                  Experience premium audio with advanced noise cancellation and all-day comfort
+                </p>
+              </div>
+              
+              {/* Pricing */}
+              <div className="flex items-center space-x-4 sonora-fade-in-up sonora-delay-400">
+                <span className="text-4xl font-bold text-black">€149.99</span>
+                <span className="text-2xl text-gray-500 line-through">€199.99</span>
+                <span className="bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-bold animate-pulse">
+                  25% OFF
+                </span>
+              </div>
 
-            {/* Payment Methods */}
-            <div className="pt-6 border-t border-gray-200">
-              <div className="flex items-center justify-center space-x-4">
-                <span className="text-sm text-gray-600 font-medium">Secure payments:</span>
-                <div className="flex space-x-2">
-                  <div className="w-10 h-6 bg-gradient-to-r from-blue-600 to-blue-700 rounded text-white text-xs flex items-center justify-center font-bold shadow-md">VISA</div>
-                  <div className="w-10 h-6 bg-gradient-to-r from-red-600 to-red-700 rounded text-white text-xs flex items-center justify-center font-bold shadow-md">MC</div>
-                  <div className="w-10 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded text-white text-xs flex items-center justify-center font-bold shadow-md">AMEX</div>
-                  <div className="w-10 h-6 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded text-black text-xs flex items-center justify-center font-bold shadow-md">PP</div>
+              {/* Color Selection */}
+              <div className="space-y-4 sonora-fade-in-up sonora-delay-500">
+                <h3 className="text-lg font-semibold text-gray-900">Choose Color</h3>
+                <div className="flex space-x-4">
+                  {colors.map((color, index) => (
+                    <button
+                      key={color.name}
+                      onClick={() => setSelectedColor(color.name)}
+                      className={`group flex flex-col items-center space-y-2 p-3 rounded-xl transition-all duration-300 sonora-hover-lift ${
+                        selectedColor === color.name ? 'bg-gray-50' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className={`w-12 h-12 rounded-full ${color.color} border-3 transition-all duration-300 ${
+                        selectedColor === color.name 
+                          ? 'border-black scale-110 sonora-glow' 
+                          : 'border-gray-300 group-hover:border-gray-400'
+                      }`}></div>
+                      <span className="text-xs text-gray-600">{color.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Add to Cart */}
+              <div className="space-y-4 sonora-fade-in-up sonora-delay-600">
+                <button className="w-full bg-black text-white py-4 px-8 rounded-2xl font-semibold text-lg transition-all duration-500 sonora-btn sonora-hover-lift relative overflow-hidden group">
+                  <span className="relative z-10">ADD TO CART - €149.99</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </button>
+
+                <button className="w-full border-2 border-black text-black py-4 px-8 rounded-2xl font-semibold text-lg transition-all duration-300 sonora-btn hover:bg-black hover:text-white">
+                  BUY NOW - Fast Checkout
+                </button>
+              </div>
+
+              {/* Trust Badges */}
+              <div className="grid grid-cols-3 gap-4 sonora-fade-in-up sonora-delay-700">
+                {[
+                  { icon: '🚚', text: 'Free Shipping', subtext: 'Worldwide' },
+                  { icon: '🔒', text: 'Secure Payment', subtext: '256-bit SSL' },
+                  { icon: '↩️', text: '60-Day Returns', subtext: 'No questions' }
+                ].map((badge, index) => (
+                  <div 
+                    key={index}
+                    className="text-center p-4 bg-gray-50 rounded-xl sonora-hover-lift"
+                  >
+                    <div className="text-2xl mb-2">{badge.icon}</div>
+                    <div className="text-xs font-semibold text-gray-900">{badge.text}</div>
+                    <div className="text-xs text-gray-600">{badge.subtext}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Stock Indicator */}
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 sonora-fade-in-up sonora-delay-800">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-orange-800">
+                    Only 7 left in stock - Order soon!
+                  </span>
+                </div>
+                <div className="mt-2 bg-orange-200 rounded-full h-2">
+                  <div className="bg-orange-500 h-2 rounded-full w-3/4 transition-all duration-1000"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-black mb-4 sonora-fade-in-up">
+              Why Choose Sonora Pro Max?
+            </h2>
+            <p className="text-xl text-gray-600 sonora-fade-in-up sonora-delay-200">
+              Premium features designed for the ultimate audio experience
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className={`text-center p-8 bg-white rounded-2xl shadow-lg sonora-hover-lift sonora-fade-in-up`}
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 sonora-hover-glow">
+                  <feature.icon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-black mb-3">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Product Showcase */}
+      <section className="bg-black text-white py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-900/20 to-blue-900/20"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="sonora-fade-in-left">
+              <h2 className="text-5xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  Immersive Sound Experience
+                </span>
+              </h2>
+              <p className="text-xl text-gray-300 leading-relaxed mb-8">
+                Advanced 40mm drivers deliver crystal-clear highs, rich mids, and deep bass. 
+                Experience your music like never before with studio-quality sound.
+              </p>
+              
+              <div className="space-y-4">
+                {[
+                  { label: 'Frequency Response', value: '20Hz - 20kHz' },
+                  { label: 'Driver Size', value: '40mm Neodymium' },
+                  { label: 'Impedance', value: '32Ω' },
+                  { label: 'Sensitivity', value: '105dB/mW' }
+                ].map((spec, index) => (
+                  <div key={index} className="flex justify-between items-center p-4 bg-white/5 rounded-xl backdrop-blur-sm">
+                    <span className="text-gray-300">{spec.label}</span>
+                    <span className="font-bold text-white">{spec.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="sonora-fade-in-right">
+              <div className="relative">
+                <div className="w-96 h-96 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full mx-auto flex items-center justify-center sonora-hover-glow sonora-float relative overflow-hidden group">
+                  <img 
+                    src="https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400"
+                    alt="Sonora Pro Max"
+                    className="w-80 h-80 object-cover rounded-full transition-all duration-700 group-hover:scale-110"
+                  />
+                </div>
+
+                {/* Orbiting Elements */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {[0, 1, 2, 3, 4, 5].map((i) => (
+                    <div
+                      key={i}
+                      className="absolute w-3 h-3 bg-white rounded-full opacity-60"
+                      style={{
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) rotate(${i * 60}deg) translateY(-${220 + i * 15}px)`,
+                        animation: `sonoraFloat ${3 + i * 0.2}s ease-in-out infinite ${i * 0.3}s`
+                      }}
+                    ></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 };
 
